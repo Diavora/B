@@ -265,6 +265,7 @@ input:focus, textarea:focus {
 }
 
 .modal-overlay {
+    display: none; /* Скрываем по умолчанию */
     position: fixed;
     top: 0;
     left: 0;
