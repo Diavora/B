@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="color-scheme" content="light dark">
+    <title>Оформление заказа</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="main.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="item-image-placeholder">
+            <!-- Icon: Package -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        </div>
+        
+        <div class="item-info">
+            <h1 id="item-name" class="skeleton skeleton-title"></h1>
+            <p id="item-description" class="skeleton skeleton-text"></p>
+            <p id="item-description-2" class="skeleton skeleton-text"></p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="details-list">
+            <div class="detail-item">
+                <!-- Icon: Price -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>Цена</span>
+                <strong id="item-price" class="skeleton skeleton-price"></strong>
+            </div>
+            <div class="detail-item" id="server-details" style="display: none;">
+                <!-- Icon: Server -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 4.26 14h1.26"/><path d="M12 18V12"/><path d="M14.64 15.36l-2.64-2.64"/></svg>
+                <span>Сервер</span>
+                <strong id="item-server" class="skeleton skeleton-price"></strong>
+            </div>
+            <div class="detail-item">
+                <!-- Icon: User -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Продавец</span>
+                <strong id="seller-username" class="skeleton skeleton-seller"></strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button id="buy-button" class="main-button">Подтвердить и купить</button>
+    </div>
+
+    <!-- Modals -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-dialog">
+            <h2 class="modal-title">Подтверждение</h2>
+            <p class="modal-text">Вы уверены, что хотите приобрести этот товар?</p>
+            <div class="modal-buttons">
+                <button id="confirm-buy-button" class="modal-button primary">Да, купить</button>
+                <button id="cancel-buy-button" class="modal-button secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-icon">
+                <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="success-checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="success-checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Успешно!</h2>
+            <p class="modal-text">Покупка совершена. Продавец скоро свяжется с вами.</p>
+            <div class="modal-buttons">
+                <button id="success-ok-button" class="modal-button primary">Отлично</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
