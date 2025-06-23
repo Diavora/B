@@ -11,7 +11,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.v2.css">
+    <style>
+        .modal-overlay {
+            display: none;
+        }
+    </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -64,6 +69,22 @@
             <div class="modal-buttons">
                 <button id="confirm-buy-button" class="modal-button primary">Да, купить</button>
                 <button id="cancel-buy-button" class="modal-button secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-icon">
+                <svg class="error-cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="error-cross__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="error-cross__path" fill="none" d="M16,16 l20,20 M36,16 l-20,20"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Ошибка</h2>
+            <p class="modal-text">Что-то пошло не так.</p>
+            <div class="modal-buttons">
+                <button id="error-ok-button" class="modal-button secondary">Понятно</button>
             </div>
         </div>
     </div>

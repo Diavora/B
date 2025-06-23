@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const tg = window.Telegram.WebApp;
-    const API_BASE_URL = '/api'; 
+    const API_BASE_URL = 'https://e68b-62-60-152-117.ngrok-free.app/api'; // Используйте ваш URL
 
     try {
         tg.ready();
@@ -11,40 +11,77 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Элементы
+    const buyButton = document.getElementById('buy-button');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const successModal = document.getElementById('success-modal');
+    const errorModal = document.getElementById('error-modal');
+    const confirmBuyBtn = document.getElementById('confirm-buy-button');
+    const cancelBuyBtn = document.getElementById('cancel-buy-button');
+    const successOkBtn = document.getElementById('success-ok-button');
+    const errorOkBtn = document.getElementById('error-ok-button');
+
+    // Данные из URL
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('itemId');
 
     if (!itemId) {
-        showModal('Ошибка', 'Не удалось определить товар для покупки.');
+        showErrorModal('Не удалось определить товар для покупки.');
         return;
     }
 
-    const item = {
-        id: itemId,
-        name: urlParams.get('name') || 'Название товара',
-        price: urlParams.get('price') || '0',
-        description: urlParams.get('description') || 'Описание отсутствует.',
-        image: urlParams.get('image') || 'path/to/default/image.jpg'
-    };
+    // --- Логика модальных окон ---
+    function showConfirmationModal() { 
+        if(confirmationModal) confirmationModal.style.display = 'flex'; 
+    }
+    function hideConfirmationModal() { 
+        if(confirmationModal) confirmationModal.style.display = 'none'; 
+    }
+    function showSuccessModal(message) {
+        if(successModal) {
+            successModal.querySelector('.modal-text').textContent = message;
+            successModal.style.display = 'flex';
+        }
+    }
+    function showErrorModal(message) {
+        if (errorModal) {
+            errorModal.querySelector('.modal-text').textContent = message;
+            errorModal.style.display = 'flex';
+        }
+    }
+    function hideErrorModal() { 
+        if (errorModal) errorModal.style.display = 'none'; 
+    }
 
-    document.getElementById('item-image').src = item.image;
-    document.getElementById('item-name').textContent = item.name;
-    document.getElementById('item-price').textContent = `${item.price} ₽`;
-    document.getElementById('item-description').textContent = item.description;
+    // --- Слушатели событий ---
+    if(buyButton) buyButton.addEventListener('click', () => {
+        showConfirmationModal();
+    });
 
-    const buyButton = document.getElementById('buy-button');
-    buyButton.addEventListener('click', async () => {
+    if(cancelBuyBtn) cancelBuyBtn.addEventListener('click', () => {
+        hideConfirmationModal();
+    });
+
+    if(errorOkBtn) errorOkBtn.addEventListener('click', () => {
+        hideErrorModal();
+    });
+
+    if(successOkBtn) successOkBtn.addEventListener('click', () => {
+        tg.close();
+    });
+
+    if(confirmBuyBtn) confirmBuyBtn.addEventListener('click', async () => {
+        hideConfirmationModal();
         buyButton.disabled = true;
         buyButton.textContent = 'Обработка...';
+        tg.HapticFeedback.impactOccurred('light');
 
         try {
             const response = await fetch(`${API_BASE_URL}/purchase`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    itemId: item.id,
+                    itemId: itemId,
                     initData: tg.initData
                 }),
             });
@@ -52,40 +89,29 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok && result.status === 'ok') {
-                showModal('Успешно!', result.message, true);
+                showSuccessModal(result.message || 'Покупка совершена. Продавец скоро свяжется с вами.');
                 tg.HapticFeedback.notificationOccurred('success');
-                setTimeout(() => tg.close(), 2000);
+                setTimeout(() => tg.close(), 3000);
             } else {
                 throw new Error(result.message || 'Произошла неизвестная ошибка.');
             }
 
         } catch (error) {
-            showModal('Ошибка', error.message);
+            showErrorModal(error.message);
             tg.HapticFeedback.notificationOccurred('error');
             buyButton.disabled = false;
-            buyButton.textContent = 'Купить';
+            buyButton.textContent = 'Подтвердить и купить';
         }
     });
 
-    const modal = document.getElementById('feedback-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalMessage = document.getElementById('modal-message');
-    const closeButton = document.querySelector('.close-button');
-
-    function showModal(title, message, isSuccess = false) {
-        modalTitle.textContent = title;
-        modalMessage.textContent = message;
-        modal.style.display = 'block';
-        modal.className = isSuccess ? 'modal success' : 'modal error';
-    }
-
-    closeButton.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
+    // Заполнение данных о товаре
+    document.getElementById('item-name').textContent = urlParams.get('name') || 'Загрузка...';
+    document.getElementById('item-description').textContent = urlParams.get('description') || '';
+    document.getElementById('item-price').textContent = `${urlParams.get('price') || '...'} ₽`;
+    document.getElementById('seller-username').textContent = `@${urlParams.get('seller') || '...'}`;
+    const server = urlParams.get('server');
+    if (server && server !== 'null') {
+        document.getElementById('item-server').textContent = server;
+        document.getElementById('server-details').style.display = 'flex';
     }
 });
